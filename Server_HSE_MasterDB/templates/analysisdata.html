@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"> -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>HSE Master Inventory Analysis</title>
+  </head>
+  <body>
+
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+  
+<div class="jumbotron p-2">
+  <div class="well text-center">
+      <h2>Analysis - HSE Events </h2>
+  </div>
+</div>
+
+
+
+  <div class="row placeholders">
+    
+    <div class="col-xs-6 col-sm-3 placeholder">
+      <h3 style=margin-left:20px; >Annual Event Summary:</h3>       
+      <div class="card" style="width: 340px">
+      <div class="card-body">
+        <form method="post" action="{{url_for('AnnualEventSummary')}}">
+                <div>
+                <label>Event Summary Report Class:</label>
+                <select class="form-select form-select-sm" style="width: 300px; height: 45px" aria-label="Select Report Class"  name="HSE_Report_Class">
+                  <option selected>Select Report Class</option>
+                  <option value="1">Class - A</option>
+                  <option value="2">Class - B</option>
+                  <option value="3">Class - C</option>
+                </select>
+              </div>
+              <br>
+
+              <div>
+                <label>HSE Event Year:</label>
+                <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="year"  name="EventSummaryYear" placeholder="Type Year To Generate">
+              </div>
+              <br>
+
+                <div>
+                  <label>Report Prepared By:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSummaryPreparedBy" placeholder="Clint McBride">
+                </div>
+                <br>
+
+                <div>
+                  <label>Report Preparation Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSummaryPreparedDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+                                    
+                <div class="form-group">
+                <button class="btn btn-success mt-2" type="submit">Generate</button>
+                </div>
+                <br>
+  
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-3 placeholder">       
+    <h3 style=margin-left:40px; >Annual Project Summary: </h3>
+   
+      <div class="card" style="width: 340px">
+        <div class="card-body">
+            <form method="post" action="{{url_for('AnnualProjectSummary')}}">
+              <div>
+                <label>Project Summary Report Class:</label>
+                <select class="form-select form-select-sm" style="width: 300px; height: 50px; font-size: 14px" aria-label="Select Project Report Class"  name="Project_Report_Class">
+                  <option selected>Select Report Class</option>
+                  <option value="1">Class - A</option>
+                  <option value="2">Class - B</option>
+                  <option value="3">Class - C</option>
+                </select>
+              </div>
+              <br>
+
+              <div>
+                <label>HSE Project Year:</label>
+                <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="year"  name="ProjectSummaryYear" placeholder="Type Year To Generate">
+              </div>
+              <br>
+
+              <div>
+                <label>Report Prepared By:</label>
+                <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="ProjectSummaryPreparedBy" placeholder="Clint McBride">
+              </div>
+              <br>
+
+              <div>
+                <label>Report Preparation Date:</label>
+                <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="ProjectSummaryPreparedDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+              </div>
+              <br>
+                                  
+              <div class="form-group">
+              <button class="btn btn-success mt-2" type="submit">Generate</button>
+              </div>
+              <br>
+
+            </form>
+          </div>
+        </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-3 placeholder">       
+    <h3 style=margin-left:40px; >Segmented Event Summary:</h3>
+        <div class="card" style="width: 340px">
+          <div class="card-body">
+              <form method="post" action="{{url_for('SegmentedEventSummary')}}">
+
+                <div>
+                  <label>Event Summary Report Class:</label>
+                  <select class="form-select form-select-sm" style="width: 300px; height: 45px" aria-label="Select Report Class"  name="HSE_Report_Class">
+                    <option selected>Select Report Class</option>
+                    <option value="1">Class - A</option>
+                    <option value="2">Class - B</option>
+                    <option value="3">Class - C</option>
+                  </select>
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Event Year:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="year"  name="EventSegYear" placeholder="Type Year To Generate">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Event Segment Name:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegName" placeholder="Q1: Quarter One or Q2: Quarter Two or Q3: Quarter Three">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Event Segment Start Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegStartDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Event Segment End Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegEndDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+
+                <div>
+                  <label>Report Prepared By:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegPreparedBy" placeholder="Clint McBride">
+                </div>
+                <br>
+
+                <div>
+                  <label>Report Preparation Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegPreparedDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+                                    
+                <div class="form-group">
+                <button class="btn btn-success mt-2" type="submit">Generate</button>
+                </div>
+                <br>
+  
+              </form>
+            </div>
+          </div>
+  </div> 
+
+  <div class="col-xs-6 col-sm-3 placeholder">       
+    <h3 style=margin-left:40px; >Segmented Project Summary:</h3>
+        <div class="card" style="width: 340px">
+          <div class="card-body">
+              <form method="post" action="{{url_for('SegmentedProjectSummary')}}">
+
+                <div>
+                  <label>Project Summary Report Class:</label>
+                  <select class="form-select form-select-sm" style="width: 300px; height: 50px; font-size: 14px" aria-label="Select Project Report Class"  name="Project_Report_Class">
+                    <option selected>Select Report Class</option>
+                    <option value="1">Class - A</option>
+                    <option value="2">Class - B</option>
+                    <option value="3">Class - C</option>
+                  </select>
+                </div>
+                <br>
+                
+                <div>
+                  <label>HSE Project Year:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="year"  name="EventSegYear" placeholder="Type Year To Generate">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Project Segment Name:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegName" placeholder="Q1: Quarter One or Q2: Quarter Two or Q3: Quarter Three">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Project Segment Start Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegStartDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+
+                <div>
+                  <label>HSE Project Segment End Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegEndDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+
+                <div>
+                  <label>Report Prepared By:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegPreparedBy" placeholder="Clint McBride">
+                </div>
+                <br>
+
+                <div>
+                  <label>Report Preparation Date:</label>
+                  <input class="form-control" style="width: 300px; height: 50px; font-size: 14px"  type="text"  name="EventSegPreparedDate" placeholder="YYYY-MM-DD" onfocus="(this.type='date')"  onblur="(this.type='text')">
+                </div>
+                <br>
+                                    
+                <div class="form-group">
+                <button class="btn btn-success mt-2" type="submit">Generate</button>
+                </div>
+                <br>
+  
+              </form>
+            </div>
+          </div>
+  </div>
+
+
+</div>
+
+
+
+ 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  </body>
+</html> 

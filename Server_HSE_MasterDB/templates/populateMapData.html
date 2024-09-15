@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+    <title>PopulateMapData</title>
+  </head>
+
+  <body>
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+    
+    <div class="jumbotron p-1">
+      <div class="well text-center">
+          <h2>Yearly Project Map Data </h2>
+          <h4 style="display: inline-block;margin-right:5px;"> Project Year: {{ ProjectMapYear }}</h4>
+          <h4 style="display: inline-block;margin-right:2px;"> Number of Projects: {{ NumberOfProject }}</h4>
+          <h4 style="display: inline-block;margin-right:2px;"> Number of Incidents: {{ Incidents_Count }}</h4>
+      </div>
+    </div>
+    <a href="{{url_for('ViewProjectMap')}}" class="btn btn-success float-left" data-toggle="modal" data-target="#modalmapview{{ProjectMapYear}}" 
+              style="margin-left: 4px" ><h5>View Map</h5></a>
+
+    <table id="ViewMapData_By_Year" class="table table-striped table-bordered" style="width: 100%">
+      <thead>
+        <tr>
+        <th>Action</th>
+        <th>ID</th>
+        <th>Project Name</th>
+        <th>Project Number</th>
+        <th>Project Location</th>
+        <th>Project Year</th>
+        <th>Project Incident Count</th>
+        <th>Latitude</th>
+        <th>Longtitude</th>
+        </tr>
+      <thead>
+        <tbody>
+          {% for row in populateMapDataBy_Year %}
+          <tr>
+            <td>
+              <a href="/updateProjectMapData/{{row[0]}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row[0]}}">Modify</a>
+              <a href="/deleteProjectMapData/{{row[0]}}" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modaldelete{{row[0]}}">Delete</a>
+          </td>
+              <td>{{row[0]}}</td>
+              <td>{{row[1]}}</td>
+              <td>{{row[2]}}</td>
+              <td>{{row[3]}}</td>
+              <td>{{row[4]}}</td>
+              <td>{{row[5]}}</td>
+              <td>{{row[6]}}</td>
+              <td>{{row[7]}}</td>            
+          </tr>
+
+
+          <!-- Start of Modifying Row -->
+        <div id="modaledit{{row[0]}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              
+              <div class="modal-header">
+                <h4 class="modal-title">Update Project Map Information</h4>
+              </div>
+            
+              <div class="modal-body">
+              <form action="{{url_for('updateProjectMapData')}}" method="POST">
+
+                <div class="form-group">
+                  <input type="hidden"  name="Proj_id" value="{{row[0]}}">
+                  <label>Project Name:</label>
+                  <input type="text" class="form-control" name="ProjectName" value="{{row[1]}}">
+                </div>
+                
+                <div class="form-group">
+                  <label>Project Number:</label>
+                  <input type="text" class="form-control" name="ProjectNumber" value="{{row[2]}}">
+                </div>
+                
+                <div class="form-group">
+                  <label>Project Location:</label>
+                  <input type="text" class="form-control" name="ProjectLocation" value="{{row[3]}}">
+                </div>
+
+                <div class="form-group">
+                  <label>Project Year:</label>
+                  <input type="text" class="form-control" name="EventYear" value="{{row[4]}}">
+                </div>
+                
+                <div class="form-group">
+                  <label>Incidents Count:</label>
+                  <input type="text" class="form-control" name="Incidents_Count" value="{{row[5]}}">
+                </div>
+                
+                <div class="form-group">
+                  <label>Latitude:</label>
+                  <input type="text" class="form-control" name="Latitude" value="{{row[6]}}">
+                </div>
+              
+                <div class="form-group">
+                  <label>Longitude:</label>
+                  <input type="text" class="form-control" name="Longitude" value="{{row[7]}}">
+                </div>
+                
+                <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+              
+              </form>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- End of Modifying Row -->
+
+      <!-- Start of Deleting HSE Incident Row -->
+      <div id="modaldelete{{row[0]}}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h4 class="modal-title">Delete Project Map Information</h4>
+            </div>
+          
+            <div class="modal-body">
+            <form action="{{url_for('deleteProjectMapData')}}" method="POST">
+              
+              <div class="form-group">
+                <label>Project Map Information ID To Delete:</label>
+                <input type="number" class="form-control" name="Proj_id" value="{{row[0]}}">
+              </div>
+
+
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Delete</button>
+              </div>
+            
+            </form>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- End of Deleting HSE Incident Row -->
+      
+        {% endfor %}
+      </tbody>
+  </table> 
+  
+  
+  <!-- Start of View Of Projects By Year -->
+  <div id="modalmapview{{ProjectMapYear}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h4 class="modal-title">Map View Of Projects By Year</h4>
+        </div>
+      
+        <div class="modal-body">
+        <form action="{{url_for('ViewProjectMap')}}" method="POST">
+          
+          <div class="form-group">
+            <label>Project Map Year To Display:</label>
+            <input type="number" class="form-control" name="ProjectMapYear" value="{{ProjectMapYear}}">
+          </div>
+
+
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">View Map</button>
+          </div>
+        
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

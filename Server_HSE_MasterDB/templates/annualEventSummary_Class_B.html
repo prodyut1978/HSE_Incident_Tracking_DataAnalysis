@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"> -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>AnnualEventSummary</title>
+  </head>
+  <body>
+
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+  
+<div class="jumbotron p-1">
+  <div class="well text-center">
+
+      <h2>Annual HSE Event Summary </h2>
+      <table class="table table-striped table-bordered" style="width: 100%">
+        <tr>
+          <th>HSE Event Year</th>
+          <th>Total HSE Events</th>
+          <th>Report Prepared By</th>
+          <th>Report Prepared Date</th>
+        </tr>  
+        <tr>
+          <td>{{EventSummaryYear}}</td>
+          <td>{{TotalEntries}}</td>
+          <td>{{EventSummaryPreparedBy}}</td>
+          <td>{{EventSummaryPreparedDate}}</td>           
+        </tr>
+      </table>
+
+  </div>
+</div>
+
+
+<main role="main" class="container-content">
+
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+
+        <div class="column" style="margin-left:20px;">   
+          <h4> HSE Monthly Event Summary: </h4>
+              {% for table in HSE_MonthlyBreakdownReport_Merge %}
+              {{ table|safe }}
+              {% endfor %}  
+          <div><br></div>
+          <div><br></div>  
+        </div> 
+
+        <div class="column" style="margin-left:20px;">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="MonthlyBreakdown_vs_incidents_bar" width="450" height ="350"></canvas>
+          </div>
+              <script>
+                let MonthlyBreakdown_vs_incidents_chart_bar = new Chart(MonthlyBreakdown_vs_incidents_bar, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ChartJS_X_labels_MonthlyBreakdown|safe}} ,
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_MonthlyBreakdown|safe}},
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","orange", ,"green", ,"purple","blue", ,"yellow", ,"red", "pink"],
+                        borderColor: "rgba(75,192,192,0.4)",
+                        borderWidth: 3,
+                        hoverBorderColor: "black",
+                        hoverBorderWidth: 3,
+                        hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                        pointHoverRadius: 5
+                    }],
+                        },
+                    options: {
+                            responsive:false,
+                            title: {display: false,text: "Monthly Breakdown Incidents",fontSize: 15,},
+                            legend: {position: "top",labels: {fontColor: "gray"},display: true,},
+                            elements: {hitRadius: 5,},
+                            scales: {yAxes: [{display: true, ticks: {suggestedMin: 0,}}]},
+                            }
+                    })
+                
+              </script>  
+        </div>
+
+        <div class="column" style="margin-left:20px;">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="MonthlyBreakdown_vs_incidents_pie" width="400" height ="300"></canvas>
+          </div>
+              <script>
+                let MonthlyBreakdown_vs_incidents_chart_pie = new Chart(MonthlyBreakdown_vs_incidents_pie, {
+                        type: 'pie',
+                        data: {
+                            labels: {{ChartJS_X_labels_MonthlyBreakdown|safe}} ,
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_MonthlyBreakdown|safe}},
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","orange", ,"green", ,"purple","blue", ,"yellow", ,"red", "pink"],
+                        borderColor: "rgba(75,192,192,0.4)",
+                        borderWidth: 3,
+                        hoverBorderColor: "black",
+                        hoverBorderWidth: 3,
+                        hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                        pointHoverRadius: 5
+                    }],
+                        },
+                    options: {
+                            responsive:false,
+                            title: {
+                                display: true,
+                                    text: "Monthly Breakdown Incidents",
+                                        fontSize: 15,
+                        },
+                            legend: {
+                                position: "bottom",
+                                    labels: {
+                                    fontColor: "gray"
+                                },
+                                display: true,
+                        },
+
+                            elements: {
+                                hitRadius: 3,
+                        }
+                        }
+                    })
+                
+              </script>  
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+
+        <div class="column" style="margin-left:20px;">   
+            <h4>HSE Event Under Project Manager Summary: </h4>
+            {% for table in HSE_CrewManagerDFReport_Merge %}
+            {{ table|safe }}
+            {% endfor %}   
+          <div><br></div>
+          <div><br></div>  
+        </div>
+  
+        <div class="column" style="margin-left:20px;">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="CrewManager_vs_incidents_bar" width="470" height ="350"></canvas>
+          </div>
+              <script>
+                let CrewManager_vs_incidents_chart_bar = new Chart(CrewManager_vs_incidents_bar, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ChartJS_X_labels_CrewManager|safe}} ,
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_CrewManager|safe}},
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","orange", ,"green", ,"purple","blue", ,"yellow", ,"red", "pink"],
+                        borderColor: "rgba(75,192,192,0.4)",
+                        borderWidth: 3,
+                        hoverBorderColor: "black",
+                        hoverBorderWidth: 3,
+                        hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                        pointHoverRadius: 5
+                    }],
+                        },
+                    options: {
+                            responsive:false,
+                            title: {display: false,text: "Event Under Project Manager",fontSize: 15,},
+                            legend: {position: "top",labels: {fontColor: "gray"},display: true,},
+                            elements: {hitRadius: 5,},
+                            scales: {yAxes: [{display: true, ticks: {suggestedMin: 0,}}]},
+                            }
+                    })
+                
+              </script>  
+        </div>
+
+        <div class="column" style="margin-left:20px;">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="CrewManager_vs_incidents_pie" width="400" height ="300"></canvas>
+          </div>
+              <script>
+                let CrewManager_vs_incidents_chart_pie = new Chart(CrewManager_vs_incidents_pie, {
+                        type: 'pie',
+                        data: {
+                            labels: {{ChartJS_X_labels_CrewManager|safe}} ,
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_CrewManager|safe}},
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","orange", ,"green", ,"purple","blue", ,"yellow", ,"red", "pink"],
+                        borderColor: "rgba(75,192,192,0.4)",
+                        borderWidth: 3,
+                        hoverBorderColor: "black",
+                        hoverBorderWidth: 3,
+                        hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                        pointHoverRadius: 5
+                    }],
+                        },
+                    options: {
+                            responsive:false,
+                            title: {
+                                display: true,
+                                    text: "Event Under Project Manager",
+                                        fontSize: 15,
+                        },
+                            legend: {
+                                position: "bottom",
+                                    labels: {
+                                    fontColor: "gray"
+                                },
+                                display: true,
+                        },
+
+                            elements: {
+                                hitRadius: 3,
+                                        }
+                                        }
+                                    })
+                                
+                              </script>  
+        </div>
+
+      </div>
+    </div>
+  </div>
+ 
+</main> 
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  </body>
+</html>

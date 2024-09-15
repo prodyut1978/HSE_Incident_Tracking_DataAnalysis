@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"> -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>EventBreakdown</title>
+  </head>
+  <body>
+
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+  
+<div class="jumbotron p-1">
+  <div class="well text-center">
+      <h2>Yearly HSE Event Break Down </h2>
+      <h4 style="display: inline-block;margin-right:5px;"> Event Year: {{ Eventyear }}</h4>
+      <h4 style="display: inline-block;margin-right:2px;"> Incidents: {{ TotalEntries }}</h4>
+  </div>
+</div>
+<main role="main" class="container-content">
+  <div class="row">
+    
+    <div class="column" style="margin-left:30px;">   
+      <div >
+        <h2>Classification Break Down: </h2>
+        {% for table in Classification_DF_Report %}
+        {{ table|safe }}
+        {% endfor %}
+      </div> 
+      <div><br></div>
+      <div><br></div> 
+      
+    <div >
+      <h2>Events Break Down By Month: </h2>
+      {% for table in HSE_MonthlyBreakdownReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div> 
+    <div><br></div>
+    <div><br></div>
+
+    <div >
+      <h2>Recordable Break Down: </h2>
+      {% for table in HSE_RecordablReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div> 
+    <div><br></div>
+    <div><br></div>
+
+    <div >
+      <h2>Emergency Break Down: </h2>
+      {% for table in HSE_RiskLevelReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div> 
+    <div><br></div>
+    <div><br></div>
+  </div>
+
+  <div class="column" style="margin-left:80px;">   
+    <div >
+      <h2>Personnel Break Down: </h2>
+      {% for table in HSE_CrewManagerDFReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div> 
+    <div><br></div>
+    <div><br></div>
+    <div >
+      <h2>Project Break Down: </h2>
+      {% for table in HSE_HSE_JobNameReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div>
+    <div><br></div>
+    <div><br></div>
+    <div >
+      <h2>Unsafe Act Break Down: </h2>
+      {% for table in HSE_UnsafeActReport %}
+      {{ table|safe }}
+      {% endfor %}
+    </div>
+  
+  </div>
+  
+
+  </div>
+</main> 
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  </body>
+</html>

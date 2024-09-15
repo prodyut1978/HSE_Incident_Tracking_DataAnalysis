@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}"> -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>AnnualProjectSummary</title>
+  </head>
+  <body>
+
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+  
+<div class="jumbotron p-1">
+  <div class="well text-center">
+
+      <h2>Annual HSE Project Summary </h2>
+      <table class="table table-striped table-bordered" style="width: 100%">
+        <tr>
+          <th>HSE Project Year</th>
+          <th>Total Project HSE Events</th>
+          <th>Report Prepared By</th>
+          <th>Report Prepared Date</th>
+        </tr>  
+        <tr>
+          <td>{{ProjectSummaryYear}}</td>
+          <td>{{TotalEntries}}</td>
+          <td>{{ProjectSummaryPreparedBy}}</td>
+          <td>{{ProjectSummaryPreparedDate}}</td>           
+        </tr>
+      </table>
+
+  </div>
+</div>
+
+
+<main role="main" class="container-content">
+
+  <div class="card">
+    <div class="card-body">
+      <div class="column">
+
+        <div class="column" style="margin-left:200px; font-size: 12px">   
+          <h4> Project Classified Event Summary: </h4>
+              {% for table in ViewJobReportBy_Classification_Pivot %}
+              {{ table|safe }}
+              {% endfor %}  
+          <div><br></div>
+          <div><br></div>  
+        </div> 
+
+        <div class="column" style="margin-left:150px; font-size: 10px">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="projectClassified_vs_incidents_bar" width="1450" height ="550"></canvas>
+          </div>
+              <script>
+                let projectClassified_vs_incidents_chart_bar = new Chart(projectClassified_vs_incidents_bar, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ChartJS_X_labels_Classification_Plot_1_2|safe}}, 
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_Classification_Plot|safe}},
+                                xAxisID:'xAxis1',
+                                backgroundColor: {{ChartJS_Y_color_Classification_Plot|safe}},
+                                borderColor: "rgba(75,192,192,0.4)",
+                                borderWidth: 3,
+                                hoverBorderColor: "black",
+                                hoverBorderWidth: 3,
+                                hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                                pointHoverRadius: 5
+                                    }],
+                                },
+                      options: {
+                      scales:{
+                        xAxes:[
+                                {id:'xAxis1',type:"category",
+                                    ticks:{
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return classific;}
+                                          }, 
+                                                        
+                                },
+                                {id:'xAxis2',type:"category",gridLines: {drawOnChartArea: false, },
+                                ticks: {
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return proj;}
+                                        }, 
+                                },
+
+                              ],
+                        yAxes:[{display: true, ticks: {suggestedMin: 0,}}],
+                            },
+                    responsive:false,
+                    title: {display: true, text: "Project Classified Incidents", fontSize: 15,},
+                    legend: {position: "bottom",labels: {fontColor: "gray"},display: true,},
+                    elements: {hitRadius: 10,}                                               
+                      }
+                  })
+                
+              </script>  
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-body">
+      <div class="column">
+
+
+        <div class="column" style="margin-left:200px; ; font-size: 12px">   
+          <h4> Project Recordable Event Summary: </h4>
+              {% for table in ViewJobReportBy_Recordable_Pivot %}
+              {{ table|safe }}
+              {% endfor %}  
+          <div><br></div>
+          <div><br></div>  
+        </div> 
+
+        <div class="column" style="margin-left:150px; font-size: 10px">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="projectRecordable_vs_incidents_bar" width="1450" height ="550"></canvas>
+          </div>
+              <script>
+                let projectRecordable_vs_incidents_chart_bar = new Chart(projectRecordable_vs_incidents_bar, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ChartJS_X_labels_Recordable_Plot_1_2|safe}}, 
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_Recordable_Plot|safe}},
+                                xAxisID:'xAxis1',
+                                backgroundColor: {{ChartJS_Y_color_Recordable_Plot|safe}},
+                                borderColor: "rgba(75,192,192,0.4)",
+                                borderWidth: 3,
+                                hoverBorderColor: "black",
+                                hoverBorderWidth: 3,
+                                hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                                pointHoverRadius: 5
+                                    }],
+                                },
+                      options: {
+                      scales:{
+                        xAxes:[
+                                {id:'xAxis1',type:"category",
+                                    ticks:{
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return classific;}
+                                          }, 
+                                                        
+                                },
+                                {id:'xAxis2',type:"category",gridLines: {drawOnChartArea: false, },
+                                ticks: {
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return proj;}
+                                        }, 
+                                },
+
+                              ],
+                        yAxes:[{display: true, ticks: {suggestedMin: 0,}}],
+                            },
+                    responsive:false,
+                    title: {display: true, text: "Project Recordable Incidents", fontSize: 15,},
+                    legend: {position: "bottom",labels: {fontColor: "gray"},display: true,},
+                    elements: {hitRadius: 10,}                                               
+                      }
+                  })
+                
+              </script>  
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-body">
+      <div class="column">
+
+
+        <div class="column" style="margin-left:200px; ; font-size: 12px">   
+          <h4> Project Emergency Event Summary: </h4>
+              {% for table in HSE_EmergencyLevelDF_Pivot %}
+              {{ table|safe }}
+              {% endfor %}  
+          <div><br></div>
+          <div><br></div>  
+        </div> 
+
+        <div class="column" style="margin-left:150px; font-size: 10px">   
+          <div>
+            <div class="chart-container" style="margin-left:20px; "></div>
+            <canvas id="projectEmergency_vs_incidents_bar" width="1450" height ="550"></canvas>
+          </div>
+              <script>
+                let projectEmergency_vs_incidents_chart_bar = new Chart(projectEmergency_vs_incidents_bar, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ChartJS_X_labels_Emergency_Plot_1_2|safe}}, 
+                            datasets: [{
+                                label: "No of HSE Incidents",
+                                data:{{ChartJS_Y_values_Emergency_Plot|safe}},
+                                xAxisID:'xAxis1',
+                                backgroundColor: {{ChartJS_Y_color_Emergency_Plot|safe}},
+                                borderColor: "rgba(75,192,192,0.4)",
+                                borderWidth: 3,
+                                hoverBorderColor: "black",
+                                hoverBorderWidth: 3,
+                                hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                                pointHoverRadius: 5
+                                    }],
+                                },
+                      options: {
+                      scales:{
+                        xAxes:[
+                                {id:'xAxis1',type:"category",
+                                    ticks:{
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return classific;}
+                                          }, 
+                                                        
+                                },
+                                {id:'xAxis2',type:"category",gridLines: {drawOnChartArea: false, },
+                                ticks: {
+                                          callback:function(label){
+                                          var proj = label.split(";")[0];
+                                          var classific= label.split(";")[1];
+                                          return proj;}
+                                        }, 
+                                },
+
+                              ],
+                        yAxes:[{display: true, ticks: {suggestedMin: 0,}}],
+                            },
+                    responsive:false,
+                    title: {display: true, text: "Project Emergency Incidents", fontSize: 15,},
+                    legend: {position: "bottom",labels: {fontColor: "gray"},display: true,},
+                    elements: {hitRadius: 10,}                                               
+                      }
+                  })
+                
+              </script>  
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+</main> 
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  </body>
+</html>

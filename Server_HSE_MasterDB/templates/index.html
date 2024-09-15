@@ -1,0 +1,84 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+HSE Analysis Home
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">HSE Home</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="https://ilostat.ilo.org/topics/safety-and-health-at-work/" target="_blank">Global HSE Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="https://www.ohscanada.com/news/" target="_blank">HSE News Feed</a></li>
+            <li><a href="https://www.worldometers.info/coronavirus/"target="_blank">COVID-19 Update</a></li>
+            <li><a href="https://www.ccohs.ca/oshanswers/information/acronyms.html"target="_blank">HSE Glossary</a></li>
+          </ul>
+         
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="starter-template">
+              <h2 class="page-header" style="text-align:center;">HSE Data Analysis & QC Reporting</h2>
+              <p class="lead"> This Tool is Designed For Health Safety and Environmental (HSE) Incidents Data Collection, Event Analysis and QC Reporting Purpose.</p>
+              <p class="lead"> To Use This Tool Please <a href="{{ url_for('login') }}">Login</a> </p>
+
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              {% for message in messages %}
+              <div class="alert alert-success alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                  <span aria-hidden="true">x</span>
+                </button>
+                {{message}}
+              </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+            
+          
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="https://preview.pixlr.com/images/800wm/1117/1/1117100558.jpg" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Health</h4>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="https://www.citypng.com/public/uploads/preview/safety-personal-protective-equipment-ppe-clipart-11583409086coogoit7mg.png" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Safety</h4>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="https://www.graphicsprings.com/filestorage/stencils/3239ffc4c1a37cffbe7cb6c7d918edc2.png?width=500&height=500" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Environmental</h4>
+            </div>
+
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="https://w7.pngwing.com/pngs/644/654/png-transparent-data-analysis-information-others-miscellaneous-logo-business.png" width="230" height="250" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Data Analysis</h4>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+{% endblock %}

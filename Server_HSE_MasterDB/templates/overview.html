@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<htmls>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>HSEOverview</title>
+  </head>
+  <body>
+
+    <div class="p-1 mb-1 bg-dark text-dark">
+      <nav class="navbar navbar-dark bg-dark">       
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('overview')}}"> <h4> Overview</h4> </a>
+          <a class="navbar-brand" href="{{url_for('ViewDashboard')}}"> <h4> Dashboard</h4></a>
+          <a class="navbar-brand" href="{{url_for('paginateviewMasterDB')}}"><h4> ViewMasterDB </h4></a>
+          <a class="navbar-brand" href="{{url_for('HSEDataAnalysis')}}"><h4> Analysis </h4></a>
+        </div>
+        <div class="p-1 mb-1 bg-dark text-dark">
+          <a class="navbar-brand" href="{{url_for('signup')}}"> <h4>Create Account </h4></a>
+          <a class="navbar-brand" href="{{url_for('logout')}}"> <h4>Logout: {{ name }} </h4></a>
+        </div>      
+      </nav> 
+    </div> 
+    
+    <div class="jumbotron p-1">
+      <div class="p-1 mb-2 bg-light text-dark">
+      <div class="well text-center">
+          <h2>Overview - HSE Events</h2>
+          <h5 style="display: inline-block;margin-bottom:15px;"> Total Incidents (In Master DB) : {{ Total_Incident }}</h5>
+      </div>
+    </div>
+    </div>
+
+    <div class="row placeholders">
+      <div class="col-xs-6 col-sm-4 placeholder" style="margin-left:20px; ">
+        <h3 style="display: inline-block;margin-bottom:15px;"> Total Incidents (Last 5 Years) : {{ LastfiveYears_MasterDB_Incident }}     
+        <h3 >Incident Overview: </h3>
+        <div >
+            {% for table in DataFrame_HSE_Incidents %}
+            {{ table|safe }}
+            {% endfor %}
+        </div>
+
+        <div><br></div>
+        
+        <div>
+          <div class="chart-container" style="margin-left:20px; "></div>
+          <canvas id="eventyear_vs_incidents" width="560" height ="410"></canvas>
+        </div>
+            <script>
+              let eventyear_vs_incidents_chart = new Chart(eventyear_vs_incidents, {
+                      type: 'bar',
+                      data: {
+                          labels: {{ChartJS_X_labels_Incidents|safe}} ,
+                          datasets: [{
+                              label: "No of HSE Incidents",
+                              data:{{ChartJS_Y_values_Incidents|safe}},
+                      backgroundColor: ["yellow", "navy", "purple", "orange", "green"],
+                      borderColor: "rgba(75,192,192,0.4)",
+                      borderWidth: 3,
+                      hoverBorderColor: "black",
+                      hoverBorderWidth: 3,
+                      hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                      pointHoverRadius: 5
+                  }],
+                      },
+                  options: {
+                    responsive:false,
+                    title: {display: true,text: "HSE Incidents Emergency",fontSize: 15,},
+                    legend: {position: "bottom",labels: {fontColor: "gray"},display: true,},  
+                    elements: {hitRadius: 5,},
+                    scales: {yAxes: [{display: true, ticks: {suggestedMin: 0,}}]},
+                      }
+                  })
+              
+            </script>
+          </div> 
+    
+    <div class="col-xs-6 col-sm-4 placeholder" style="margin-left:150px; ">       
+    <h3 style="display: inline-block;margin-bottom:15px;"> HSE Event Index Percent (Last 5 Years) : {{ Eventindex }}</h3>
+    <h3>Emergency Overview: </h3>
+      
+      <div>
+        {% for table in DataFrame_HSE_EmergencyCounts %}
+        {{ table|safe }}
+        {% endfor %}
+      </div>
+
+      <div><br></div> 
+
+      <div>
+        <div class="chart-container" style="position: relative;"></div>
+        <canvas id="eventyear_vs_emergency" width="850" height ="410"></canvas>
+      </div>
+          <script>                                          
+            let eventyear_vs_emergency_chart = new Chart(eventyear_vs_emergency, {
+                    type: 'bar',
+                    data: {
+                        labels: {{ChartJS_X_labels_Emergency_1|safe}},  
+                        datasets: [{
+                            label: 'Emergency Incidents Per Year', 
+                            data:{{ChartJS_Y_values_Emergency|safe}},
+                            xAxisID:'xAxis1',
+                            backgroundColor: {{ChartJS_Y_color_Emergency|safe}}, 
+                            fillColor: ["rgba(220,220,220,0.5)", "navy", "red", "orange"],
+                            strokeColor: "rgba(220,220,220,0.8)",
+                            highlightFill: "rgba(220,220,220,0.75)",
+                            highlightStroke: "rgba(220,220,220,1)",
+                            borderColor: "rgba(75,192,192,0.4)",
+                            borderWidth: 3,
+                            hoverBorderColor: "blue",
+                            hoverBorderWidth: 3,
+                            hoverBackgroundColor: "rgba(75,192,192,0.4)",
+                            pointHoverRadius: 5 }],
+                          },
+                    
+                    options: {
+                      scales:{
+                        xAxes:[
+                                {id:'xAxis1',type:"category",
+                                    ticks:{
+                                          callback:function(label){
+                                          var year = label.split(";")[0];
+                                          var emergency= label.split(";")[1];
+                                          return emergency;}
+                                          }, 
+                                                        
+                                },
+                                {id:'xAxis2',type:"category",gridLines: {drawOnChartArea: false, },
+                                ticks: {
+                                          callback:function(label){
+                                          var year = label.split(";")[0];
+                                          var emergency= label.split(";")[1];
+                                          if(emergency === "Low"){
+                                              return year;
+                                            } else{
+                                              return "";}}
+                                        }, 
+                                },
+
+                              ],
+                        yAxes:[{display: true, ticks: {suggestedMin: 0,}}],
+                            },
+                    responsive:false,
+                    title: {display: true, text: "HSE Incidents Each Year", fontSize: 15,},
+                    legend: {position: "bottom",labels: {fontColor: "gray"},display: true,},
+                    elements: {hitRadius: 5,}                                               
+                      }
+                  })
+            
+        </script>
+      </div> 
+  </div>
+
+ 
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  
+  </body>
+</html>
